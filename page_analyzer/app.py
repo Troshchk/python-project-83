@@ -38,9 +38,18 @@ def add_url():
     return render_template('main.html', messages=messages), 422
 
 
-@app.route("/")
-def welcome():
-    return render_template("main.html")
+@app.get("/urls")
+def show_urls():
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+    except:
+        print('Can`t establish connection to database')
+    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
+        curs.execute('SELECT * FROM urls ORDER BY id DESC')
+        urls = curs.fetchall()
+    conn.close()
+    return render_template('urls_all.html', urls=urls)
+
 
 
 @app.get("/sites")
