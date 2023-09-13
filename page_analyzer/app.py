@@ -5,6 +5,11 @@ app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 DATABASE_URL = os.getenv('DATABASE_URL')
 
+@app.get("/")
+def main_page():
+    return render_template("main.html", errors = None)
+
+
 @app.post("/urls")
 def add_url():
     url_to_add = request.form.to_dict()["url"]
