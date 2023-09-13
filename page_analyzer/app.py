@@ -52,6 +52,19 @@ def show_urls():
 
 
 
-@app.get("/sites")
-def sites_get():
-    return "Sites"
+@app.get("/urls/<id>")
+def show_url_by_id(id):
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+    except:
+        print('Can`t establish connection to database')
+    with conn.cursor() as curs:
+            curs.execute('SELECT * FROM urls WHERE id=%s', (id,))
+            url_to_show = curs.fetchall()
+    conn.close()
+    if len(url_to_show)<1:
+        return "NOT FOUND"
+    name = url_to_show[0][1]
+    created_at = url_to_show[0][2]
+    messages = get_flashed_messages(with_categories=True)
+    return render_template('individual_url.html', messages=messages, name=name, created_at=created_at, id=id), 200
