@@ -20,23 +20,30 @@
             </div>
           </nav>
     </header>
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{category}}" role="alert">{{message}}</div>
-        {% endfor %}
-    {%endif%}
     <main class="flex-grow-1">
-    <div class="row container-lg mt-3 bg-body-tertiary border border-secondary-subtle rounded w-50 mx-auto pt-5 px-5 pb-4">
-        <h1 class="display-3 pb-2">Анализатор страниц</h1>
-        <h2 class="lead pb-2">Бесплатно проверяйте сайты на SEO-пригодность</h2>
-        <form action={{ url_for("add_url") }} class="d-flex justify-content-center" method="post">
-                <label for="Input website" class="visually-hidden">
-                    Website
-                </label>
-                <input type="text" required class="form-control form-control-lg" placeholder="https://www.example.com" name="url">
-                <input type="submit" class="btn btn-primary btn-lg px-5 text-uppercase mx-3" value="Проверить" />
-        </form>
+    <div class="container-lg mt-3">
+    <h1>Сайты</h1>
+    <div>
+        <table class="table table-bordered table-hover mt-2" data-test="urls">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>Имя	</th>
+                <th>Последняя проверка</th>
+                <th>Код ответа</th>
+            </tr>
+            </thead>
+            {% for url in urls %}
+            <tr>
+                <td>{{url.id}}</td>
+                <td><a href={{url_for("show_url_by_id", id=url.id)}}>{{url.name}}</a></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {%endfor%}
+        </table>
     </div>
+</div>
     </main>
 </body>
 </html>   
