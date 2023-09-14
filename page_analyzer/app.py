@@ -70,6 +70,9 @@ def show_url_by_id(id):
     with conn.cursor() as curs:
         curs.execute('SELECT * FROM urls WHERE id=%s', (id,))
         url_to_show = curs.fetchall()
+    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
+        curs.execute('SELECT * FROM url_checks WHERE url_id=%s', (id,))
+        checks = curs.fetchall()
     conn.close()
     if len(url_to_show) < 1:
         return "NOT FOUND"
@@ -77,6 +80,7 @@ def show_url_by_id(id):
     created_at = url_to_show[0][2]
     messages = get_flashed_messages(with_categories=True)
     return render_template('individual_url.html', messages=messages,
+                           name=name, created_at=created_at, id=id, checks=checks), 200
 
 
 @app.post("/urls/<id>/checks")
