@@ -6,6 +6,7 @@ import psycopg2
 from psycopg2.extras import NamedTupleCursor
 import os
 from dotenv import load_dotenv
+from collections import namedtuple
 
 load_dotenv()
 app = Flask(__name__)
@@ -55,10 +56,23 @@ def show_urls():
     except:
         print('Can`t establish connection to database')
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-        curs.execute('SELECT * FROM urls ORDER BY id DESC')
+        curs.execute('SELECT id,name,created_at FROM urls ORDER BY id DESC')
         urls = curs.fetchall()
+    url_to_show = namedtuple('URL',['id','name', 'created_at', 'last_check_created_at', "last_check_status_code"])
+    urls_to_show = []
+    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
+        for url in urls:
+            curs.execute('SELECT created_at,status_code FROM url_checks WHERE url_id=%s ORDER BY id DESC', (url.id,))
+            check = curs.fetchone()
+            print(check)
+            if check:
+                check_created_at = check.created_at if check.created_at else ""
+                check_status_code = check.status_code if check.status_code else ""
+                urls_to_show.append(url_to_show(url.id, url.name, url.created_at, check_created_at, check_status_code))
+            else:
+                urls_to_show.append(url_to_show(url.id, url.name, url.created_at, "", ""))
     conn.close()
-    return render_template('urls_all.html', urls=urls)
+    return render_template('urls_all.html', urls=urls_to_show)
 
 
 @app.get("/urls/<id>")
