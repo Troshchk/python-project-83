@@ -77,4 +77,18 @@ def show_url_by_id(id):
     created_at = url_to_show[0][2]
     messages = get_flashed_messages(with_categories=True)
     return render_template('individual_url.html', messages=messages,
-                           name=name, created_at=created_at, id=id), 200
+
+
+@app.post("/urls/<id>/checks")
+def check_url(id):
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+    except:
+        print('Can`t establish connection to database')
+    with conn.cursor() as curs:
+        curs.execute('INSERT INTO url_checks(url_id, created_at) \
+                     VALUES (%s, %s)',
+                     (id, date.today().isoformat(),))
+        conn.commit()
+    conn.close()
+    return redirect(url_for('show_url_by_id', id=id))
