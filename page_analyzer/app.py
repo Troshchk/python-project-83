@@ -7,6 +7,7 @@ from psycopg2.extras import NamedTupleCursor
 import os
 from dotenv import load_dotenv
 from collections import namedtuple
+import requests
 
 load_dotenv()
 app = Flask(__name__)
@@ -112,9 +113,17 @@ def check_url(id):
     except:
         print('Can`t establish connection to database')
     with conn.cursor() as curs:
-        curs.execute('INSERT INTO url_checks(url_id, created_at) \
-                     VALUES (%s, %s)',
-                     (id, date.today().isoformat(),))
-        conn.commit()
-    conn.close()
+        curs.execute('SELECT name FROM urls WHERE id=%s', (id,))
+        url_to_query = curs.fetchall()[0][0]
+    r = requests.get(url_to_query)
+    status_code = r.status_code
+    if status_code != "200":
+        flash("Произошла ошибка при проверке", "danger")
+    else:
+        with conn.cursor() as curs:
+            curs.execute('INSERT INTO url_checks(url_id, created_at, status_code) \
+                        VALUES (%s, %s, %s)',
+                        (id, date.today().isoformat(), r.status_code, ))
+            conn.commit()
+        conn.close()
     return redirect(url_for('show_url_by_id', id=id))
