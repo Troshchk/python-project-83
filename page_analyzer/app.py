@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 from collections import namedtuple
 import requests
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse
 
 load_dotenv()
 app = Flask(__name__)
@@ -24,7 +24,8 @@ def main_page():
 @app.post("/urls")
 def add_url():
     url_to_add = request.form.to_dict()["url"]
-    url_to_add = urlparse(url_to_add)._replace(path="")._replace(params="")._replace(query="")._replace(fragment="").geturl()
+    url_to_add = urlparse(url_to_add)._replace(path="")._replace(params="").\
+        _replace(query="")._replace(fragment="").geturl()
     print(url_to_add)
     if validators.url(url_to_add) and len(url_to_add) < 256:
         try:
