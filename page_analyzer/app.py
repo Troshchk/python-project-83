@@ -69,6 +69,8 @@ def show_urls():
             check = curs.fetchone()
             print(check)
             if check:
+                check_created_at = check.created_at or ""
+                check_status_code = check.status_code or ""
                 urls_to_show.append(url_to_show(url.id, url.name,
                                                 url.created_at,
                                                 check_created_at,
