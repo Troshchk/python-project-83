@@ -121,9 +121,10 @@ def check_url(id):
         flash("Произошла ошибка при проверке", "danger")
     else:
         with conn.cursor() as curs:
-            curs.execute('INSERT INTO url_checks(url_id, created_at, status_code) \
-                        VALUES (%s, %s, %s)',
-                        (id, date.today().isoformat(), r.status_code, ))
+            curs.execute('INSERT INTO url_checks(url_id, created_at, \
+                         status_code) \
+                         VALUES (%s, %s, %s)',
+                         (id, date.today().isoformat(), r.status_code, ))
             conn.commit()
         conn.close()
     return redirect(url_for('show_url_by_id', id=id))
