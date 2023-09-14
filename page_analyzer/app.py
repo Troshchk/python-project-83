@@ -120,7 +120,7 @@ def check_url(id):
         url_to_query = curs.fetchall()[0][0]
     r = requests.get(url_to_query)
     status_code = r.status_code
-    if status_code != "200":
+    if status_code != 200:
         flash("Произошла ошибка при проверке", "danger")
     else:
         with conn.cursor() as curs:
