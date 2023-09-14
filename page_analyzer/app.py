@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from collections import namedtuple
 import requests
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
 load_dotenv()
 app = Flask(__name__)
@@ -124,11 +125,15 @@ def check_url(id):
     if status_code != 200:
         flash("Произошла ошибка при проверке", "danger")
     else:
+        response_text = BeautifulSoup(r.text, "html.parser")
+        title = response_text.title.string if response_text.title else ""
+        h1 = response_text.h1.string if response_text.h1 else ""
+        description = response_text.meta.get("content", "") if response_text.meta else ""
         with conn.cursor() as curs:
             curs.execute('INSERT INTO url_checks(url_id, created_at, \
-                         status_code) \
-                         VALUES (%s, %s, %s)',
-                         (id, date.today().isoformat(), r.status_code, ))
+                         status_code, h1, title, description) \
+                         VALUES (%s, %s, %s, %s, %s, %s)',
+                         (id, date.today().isoformat(), r.status_code, h1, title, description,))
             conn.commit()
         conn.close()
     return redirect(url_for('show_url_by_id', id=id))
