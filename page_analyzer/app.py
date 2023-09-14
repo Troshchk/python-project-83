@@ -58,19 +58,24 @@ def show_urls():
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute('SELECT id,name,created_at FROM urls ORDER BY id DESC')
         urls = curs.fetchall()
-    url_to_show = namedtuple('URL',['id','name', 'created_at', 'last_check_created_at', "last_check_status_code"])
+    url_to_show = namedtuple('URL', ['id', 'name', 'created_at',
+                                     'last_check_created_at',
+                                     "last_check_status_code"])
     urls_to_show = []
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         for url in urls:
-            curs.execute('SELECT created_at,status_code FROM url_checks WHERE url_id=%s ORDER BY id DESC', (url.id,))
+            curs.execute('SELECT created_at,status_code FROM url_checks WHERE \
+                         url_id=%s ORDER BY id DESC', (url.id,))
             check = curs.fetchone()
             print(check)
             if check:
-                check_created_at = check.created_at if check.created_at else ""
-                check_status_code = check.status_code if check.status_code else ""
-                urls_to_show.append(url_to_show(url.id, url.name, url.created_at, check_created_at, check_status_code))
+                urls_to_show.append(url_to_show(url.id, url.name,
+                                                url.created_at,
+                                                check_created_at,
+                                                check_status_code))
             else:
-                urls_to_show.append(url_to_show(url.id, url.name, url.created_at, "", ""))
+                urls_to_show.append(url_to_show(url.id, url.name,
+                                                url.created_at, "", ""))
     conn.close()
     return render_template('urls_all.html', urls=urls_to_show)
 
@@ -94,7 +99,8 @@ def show_url_by_id(id):
     created_at = url_to_show[0][2]
     messages = get_flashed_messages(with_categories=True)
     return render_template('individual_url.html', messages=messages,
-                           name=name, created_at=created_at, id=id, checks=checks), 200
+                           name=name, created_at=created_at, id=id,
+                           checks=checks), 200
 
 
 @app.post("/urls/<id>/checks")
