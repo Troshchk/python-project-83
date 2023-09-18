@@ -19,6 +19,7 @@ validators = "^0.22.0"
 python-dotenv = "^1.0.0"
 requests = "^2.31.0"
 bs4 = "^0.0.1"
+pytest-postgresql = "^5.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
