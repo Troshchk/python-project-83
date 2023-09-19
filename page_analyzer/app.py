@@ -80,5 +80,6 @@ def check_url(id):
     if status_code != 200:
         flash("Произошла ошибка при проверке", "danger")
     else:
+        flash("Страница успешно проверена", "success")
         page_analyser.insert_check_to_db(id, response)
     return redirect(url_for("show_url_by_id", id=id))
