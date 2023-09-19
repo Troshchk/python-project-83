@@ -24,6 +24,8 @@ page_analyser = Page_analyzer(db_manager=db_manager)
 
 @app.get("/")
 def main_page():
+    print(db_manager.connection)
+    print(os.getenv("DATABASE_URL"))
     return render_template("main.html", errors=None)
 
 
