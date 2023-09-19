@@ -16,6 +16,7 @@ class DB_manager:
         with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
             curs.execute("SELECT * FROM urls WHERE name=%s", (url_name,))
             result = curs.fetchone()
+        conn.close()
         return result
 
     def get_all_urls(self):
