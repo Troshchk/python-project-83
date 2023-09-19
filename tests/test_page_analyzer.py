@@ -33,7 +33,7 @@ def database(postgresql_proc):
 
 @pytest.mark.parametrize("url", ["https://www.google.de"])
 def test_page_analyzer(url, database):
-    db_manager = DB_manager(connection=database)
+    db_manager = DB_manager(connection=database, DATABASE_URL=database.dsn)
     page_analyzer = Page_analyzer(db_manager=db_manager)
     all_urls = page_analyzer.format_all_urls_to_show()
     print(all_urls)
