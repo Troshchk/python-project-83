@@ -21,13 +21,7 @@ def database(postgresql_proc):
         password="secret_password",
     )
     janitor.init()
-    db = psycopg2.connect(
-        dbname="my_test_database",
-        user=postgresql_proc.user,
-        password="secret_password",
-        host=postgresql_proc.host,
-        port=postgresql_proc.port,
-    )
+    db = psycopg2.connect(DATABASE_URL)
     with open("test.sql") as f:
         setup_sql = f.read()
     with db.cursor() as cursor:
