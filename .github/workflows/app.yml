@@ -32,6 +32,11 @@ jobs:
           make install
       - name: Run linter
         run: make lint
+      - name: Add data to database
+        - run: |
+          psql -h postgres -U postgres -c 'CREATE TABLE urls( id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,name varchar(255),created_at date);'
+          psql -h postgres -U postgres -c 'INSERT INTO urls(name, created_at) VALUES ('https://www.google.com', '2023-09-14');'
+          psql -h postgres -U postgres -c 'INSERT INTO urls(name, created_at) VALUES ('http://docs.python.org:80', '2023-09-14');'
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         if: github.ref_name == 'main'
