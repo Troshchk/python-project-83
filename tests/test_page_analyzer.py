@@ -22,11 +22,6 @@ def database(postgresql_proc):
     )
     janitor.init()
     db = psycopg2.connect(DATABASE_URL)
-    with open("test.sql") as f:
-        setup_sql = f.read()
-    with db.cursor() as cursor:
-        cursor.execute(setup_sql)
-        db.commit()
     yield db
     janitor.drop()
 
