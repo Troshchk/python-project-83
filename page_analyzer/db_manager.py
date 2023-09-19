@@ -1,12 +1,21 @@
 from datetime import date
 from psycopg2.extras import NamedTupleCursor
+import psycopg2
 
 
 class DB_manager:
     def __init__(self, connection):
         self.connection = connection
 
+    def reconnect(self):
+        try:
+            with self.connection:
+                print("Connected")
+        except psycopg2.InterfaceError:
+            self.connection = psycopg2.connect(self.connection.dsn)
+
     def get_record_by_url_name(self, url_name):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute("SELECT * FROM urls WHERE name=%s", (url_name,))
@@ -14,6 +23,7 @@ class DB_manager:
         return result
 
     def get_all_urls(self):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute(
@@ -23,6 +33,7 @@ class DB_manager:
         return urls
 
     def get_last_check(self, url):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute(
@@ -34,6 +45,7 @@ class DB_manager:
         return check
 
     def get_url_info_by_id(self, id):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute("SELECT * FROM urls WHERE id=%s", (id,))
@@ -41,6 +53,7 @@ class DB_manager:
         return url_to_show
 
     def get_checks_info_by_url_id(self, id):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute("SELECT * FROM url_checks WHERE url_id=%s", (id,))
@@ -48,6 +61,7 @@ class DB_manager:
         return checks
 
     def get_record_by_url_id(self, id):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute(
@@ -57,6 +71,7 @@ class DB_manager:
         return name
 
     def insert_url_to_db(self, url):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute(
@@ -70,6 +85,7 @@ class DB_manager:
             conn.commit()
 
     def insert_check_to_db(self, id, status_code, h1, title, description):
+        self.reconnect()
         with self.connection as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute(
