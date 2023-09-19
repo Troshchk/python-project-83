@@ -31,6 +31,7 @@ def test_page_analyzer(url, database):
     db_manager = DB_manager(connection=database)
     page_analyzer = Page_analyzer(db_manager=db_manager)
     all_urls = page_analyzer.format_all_urls_to_show()
+    print(all_urls)
     assert len(all_urls) == 2
     assert page_analyzer.add_new_url_to_db(URL(url)) == 3
     all_urls = page_analyzer.format_all_urls_to_show()
