@@ -25,6 +25,7 @@ jobs:
         if: github.ref_name == 'main'
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/postgres"
         with:
           coverageCommand: make test-coverage
           debug: true
