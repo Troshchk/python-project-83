@@ -8,12 +8,11 @@ class DB_manager:
         self.connection = connection
 
     def reconnect(self):
-        try:
-            with self.connection:
-                print("Connected")
-        except psycopg2.InterfaceError:
+        if self.connection.closed == 1:
             print("Reconnecting")
             self.connection = psycopg2.connect(self.connection.dsn)
+        else:
+            print("Connected")
 
     def get_record_by_url_name(self, url_name):
         self.reconnect()
