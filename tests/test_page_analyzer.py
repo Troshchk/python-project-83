@@ -3,7 +3,7 @@ import datetime
 from page_analyzer.url import URL
 from page_analyzer.db_manager import DB_manager
 from page_analyzer.page_analyser import Page_analyzer
-import psycopg
+import psycopg2
 from pytest_postgresql.janitor import DatabaseJanitor
 import os
 
@@ -21,7 +21,7 @@ def database(postgresql_proc):
         password="secret_password",
     )
     janitor.init()
-    db = psycopg.connect(
+    db = psycopg2.connect(
         dbname="my_test_database",
         user=postgresql_proc.user,
         password="secret_password",
