@@ -16,14 +16,14 @@ class DB_manager:
         return self.connection
 
     def get_record_by_url_name(self, url_name):
-        with self.reconnect() as conn:
+        with psycopg2.connect(self.connection.dsn) as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute("SELECT * FROM urls WHERE name=%s", (url_name,))
                 result = curs.fetchone()
         return result
 
     def get_all_urls(self):
-        with self.reconnect() as conn:
+        with psycopg2.connect(self.connection.dsn) as conn:
             with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
                 curs.execute(
                     "SELECT id,name,created_at FROM urls ORDER BY id DESC"
