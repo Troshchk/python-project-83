@@ -59,12 +59,8 @@ class Page_analyzer:
     def check_url(self, id):
         url_to_query = self.db_manager.get_record_by_url_id(id)
         url_to_query = url_to_query.name
-        try:
-            response = requests.get(url_to_query)
-            status_code = response.status_code
-        except:
-            response = None
-            status_code = 404
+        response = requests.get(url_to_query)
+        status_code = response.status_code
         return status_code, response
 
     def _format_reponse_for_db(self, response):

@@ -5,9 +5,18 @@ import validators
 
 @pytest.mark.parametrize(
     "url, expected",
-    [('https://www.google.com', False),
-    ('not_valid', True),
-    ('https://www.goooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooogle.com', True)])
+    [
+        ("https://www.google.com", False),
+        ("not_valid", True),
+        (
+            "https://www.goooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooogle.com",
+            True,
+        ),
+    ],
+)
 def test_url_formatting(url, expected):
     print(type(URL(url).is_valid()))
-    assert isinstance(URL(url).is_valid(), validators.utils.ValidationError) == expected
+    assert (
+        isinstance(URL(url).is_valid(), validators.utils.ValidationError)
+        == expected
+    )
