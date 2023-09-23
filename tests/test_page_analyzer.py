@@ -50,8 +50,8 @@ def test_page_analyzer():
     all_urls = page_analyzer.format_all_urls_to_show()
     print(all_urls)
     assert len(all_urls) == 2
-    all_urls = page_analyzer.format_all_urls_to_show()
     page_analyzer.add_new_url_to_db(URL("https://www.google.de"))
+    all_urls = page_analyzer.format_all_urls_to_show()
     print(all_urls)
     assert len(all_urls) == 3
     assert all_urls[0].created_at == datetime.date.today()
