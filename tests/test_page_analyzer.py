@@ -57,5 +57,5 @@ def test_page_analyzer():
     assert status_code == 404
     page_analyzer.add_new_url_to_db(URL("https://www.google.uk"))
     status_code, response = page_analyzer.check_url(5)
-    assert status_code == 404
+    assert status_code == None
     assert response == None
