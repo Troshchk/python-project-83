@@ -43,6 +43,7 @@ def test_initial():
     ],
 )
 def test_post_url(url, expected):
+    print(os.listdir())
     print(os.listdir("./tests"))
     print(os.listdir("./tests/fixtures"))
     response = app.test_client().post("/urls", data={"url": url})
