@@ -28,7 +28,7 @@ def teardown_module():
         db.commit()
 
 
-def test_page_analyzer(database):
+def test_page_analyzer():
     db_manager = DB_manager(connection=psycopg2.connect(DATABASE_URL), DATABASE_URL=DATABASE_URL)
     page_analyzer = Page_analyzer(db_manager=db_manager)
     all_urls = page_analyzer.format_all_urls_to_show()
