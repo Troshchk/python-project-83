@@ -48,30 +48,37 @@ def test_page_analyzer():
     db_manager = DB_manager(connection=psycopg2.connect(DATABASE_URL), DATABASE_URL=DATABASE_URL)
     page_analyzer = Page_analyzer(db_manager=db_manager)
     all_urls = page_analyzer.format_all_urls_to_show()
-    print(all_urls)
     assert len(all_urls) == 2
     page_analyzer.add_new_url_to_db(URL("https://www.google.de"))
     all_urls = page_analyzer.format_all_urls_to_show()
-    print(all_urls)
     assert len(all_urls) == 3
-    assert all_urls[0].created_at == datetime.date.today()
-    assert all_urls[0].name == "https://www.google.de"
-    ind_url = page_analyzer.format_ind_url_to_show(all_urls[0].id)
-    assert ind_url[0].created_at == datetime.date(2023, 9, 14)
-    assert ind_url[0].name == "https://www.google.com"
-    assert ind_url[1] == []
-    status_code, response = page_analyzer.check_url(1)
+    last_url = all_urls[0]
+    assert last_url.created_at == datetime.date.today()
+    assert last_url.name == "https://www.google.de"
+    first_url_id = all_urls[-1].id
+    first_url_with_all_info = page_analyzer.format_ind_url_to_show(first_url_id)
+    first_url_info = first_url_with_all_info[0]
+    first_url_checks = first_url_with_all_info[1]
+    assert first_url_info.created_at == datetime.date(2023, 9, 14)
+    assert first_url_info.name == "https://www.google.com"
+    assert first_url_checks == []
+    status_code, response = page_analyzer.check_url(first_url_id)
     assert status_code == 200
-    page_analyzer.insert_check_to_db(all_urls[0].id, response)
-    ind_url = page_analyzer.format_ind_url_to_show(all_urls[0].id)
-    checks = ind_url[1][0]
-    assert checks.status_code == status_code
-    assert checks.url_id == 1
-    assert checks.title == "Google"
+    page_analyzer.insert_check_to_db(first_url_id, response)
+    first_url_with_all_info = page_analyzer.format_ind_url_to_show(first_url_id)
+    first_url_checks = first_url_with_all_info[1]
+    check = first_url_checks[0]
+    assert check.status_code == status_code
+    assert check.url_id == 1
+    assert check.title == "Google"
     page_analyzer.add_new_url_to_db(URL("http://www.studio404.net"))
-    status_code, response = page_analyzer.check_url(len(page_analyzer.format_all_urls_to_show()))
+    all_urls = page_analyzer.format_all_urls_to_show()
+    last_url_id = all_urls[0].id
+    status_code, response = page_analyzer.check_url(last_url_id)
     assert status_code == 404
     page_analyzer.add_new_url_to_db(URL("https://www.google.uk"))
-    status_code, response = page_analyzer.check_url(len(page_analyzer.format_all_urls_to_show()))
+    all_urls = page_analyzer.format_all_urls_to_show()
+    last_url_id = all_urls[0].id
+    status_code, response = page_analyzer.check_url(last_url_id)
     assert status_code == None
     assert response == None
