@@ -21,8 +21,14 @@ def set_path_to_fixture(LOCAL):
 
 def setup_module():
     db = psycopg2.connect(DATABASE_URL)
-    with open(f"{set_path_to_fixture(LOCAL)}test_setup.sql") as f:
-        setup_sql = f.read()
+    if LOCAL:
+        with open(f"{set_path_to_fixture(LOCAL)}test_setup_create.sql") as f:
+            setup_sql = f.read()
+        with open(f"{set_path_to_fixture(LOCAL)}test_setup_insert.sql") as f:
+            setup_sql = setup_sql + f.read()
+    else:
+        with open(f"{set_path_to_fixture(LOCAL)}test_setup_insert.sql") as f:
+            setup_sql = f.read()
     with db.cursor() as cursor:
         cursor.execute(setup_sql)
         db.commit()
@@ -35,6 +41,7 @@ def teardown_module():
             teardown_sql = f.read()
         with db.cursor() as cursor:
             cursor.execute(teardown_sql)
+
 
 def test_page_analyzer():
     db_manager = DB_manager(connection=psycopg2.connect(DATABASE_URL), DATABASE_URL=DATABASE_URL)
