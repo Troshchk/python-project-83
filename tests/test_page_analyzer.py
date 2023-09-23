@@ -56,22 +56,22 @@ def test_page_analyzer():
     assert len(all_urls) == 3
     assert all_urls[0].created_at == datetime.date.today()
     assert all_urls[0].name == "https://www.google.de"
-    ind_url = page_analyzer.format_ind_url_to_show(1)
+    ind_url = page_analyzer.format_ind_url_to_show(all_urls[0].id)
     assert ind_url[0].created_at == datetime.date(2023, 9, 14)
     assert ind_url[0].name == "https://www.google.com"
     assert ind_url[1] == []
     status_code, response = page_analyzer.check_url(1)
     assert status_code == 200
-    page_analyzer.insert_check_to_db(1, response)
-    ind_url = page_analyzer.format_ind_url_to_show(1)
+    page_analyzer.insert_check_to_db(all_urls[0].id, response)
+    ind_url = page_analyzer.format_ind_url_to_show(all_urls[0].id)
     checks = ind_url[1][0]
     assert checks.status_code == status_code
     assert checks.url_id == 1
     assert checks.title == "Google"
     page_analyzer.add_new_url_to_db(URL("http://www.studio404.net"))
-    status_code, response = page_analyzer.check_url(4)
+    status_code, response = page_analyzer.check_url(len(page_analyzer.format_all_urls_to_show()))
     assert status_code == 404
     page_analyzer.add_new_url_to_db(URL("https://www.google.uk"))
-    status_code, response = page_analyzer.check_url(5)
+    status_code, response = page_analyzer.check_url(len(page_analyzer.format_all_urls_to_show()))
     assert status_code == None
     assert response == None
