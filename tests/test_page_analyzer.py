@@ -21,7 +21,7 @@ def setup_module():
 
 def teardown_module():
     db = psycopg2.connect(DATABASE_URL)
-    with open("tests/fixtures/test_teardown.sqlfixtures/") as f:
+    with open("tests/fixtures/test_teardown.sql") as f:
         teardown_sql = f.read()
     with db.cursor() as cursor:
         cursor.execute(teardown_sql)
