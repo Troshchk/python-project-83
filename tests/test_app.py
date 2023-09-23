@@ -5,16 +5,33 @@ import psycopg2
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+LOCAL = os.getenv("LOCAL_TESTS", default=False)
+
+
+def set_path_to_fixture(LOCAL):
+    if LOCAL:
+        path_to_fixture = "tests/fixtures/"
+    else:
+        path_to_fixture = "code/tests/fixtures/"
+    return path_to_fixture
 
 
 def setup_module():
     db = psycopg2.connect(DATABASE_URL)
-    with open("code/tests/fixtures/test_setup.sql") as f:
+    with open(f"{set_path_to_fixture(LOCAL)}test_setup.sql") as f:
         setup_sql = f.read()
     with db.cursor() as cursor:
         cursor.execute(setup_sql)
         db.commit()
 
+
+def teardown_module():
+    if LOCAL:
+        db = psycopg2.connect(DATABASE_URL)
+        with open(f"{set_path_to_fixture(LOCAL)}test_teardown.sql") as f:
+            teardown_sql = f.read()
+        with db.cursor() as cursor:
+            cursor.execute(teardown_sql)
 
 
 def test_initial():
