@@ -1,10 +1,8 @@
-import pytest
 import datetime
 from page_analyzer.url import URL
 from page_analyzer.db_manager import DB_manager
 from page_analyzer.page_analyser import Page_analyzer
 import psycopg2
-from pytest_postgresql.janitor import DatabaseJanitor
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -79,5 +77,5 @@ def test_page_analyzer():
     all_urls = page_analyzer.format_all_urls_to_show()
     last_url_id = all_urls[0].id
     status_code, response = page_analyzer.check_url(last_url_id)
-    assert status_code == None
-    assert response == None
+    assert status_code is None
+    assert response is None
