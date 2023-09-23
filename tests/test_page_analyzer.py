@@ -41,6 +41,7 @@ def teardown_module():
             teardown_sql = f.read()
         with db.cursor() as cursor:
             cursor.execute(teardown_sql)
+            db.commit()
 
 
 def test_page_analyzer():
