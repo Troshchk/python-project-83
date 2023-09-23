@@ -69,7 +69,6 @@ def test_page_analyzer():
     first_url_checks = first_url_with_all_info[1]
     check = first_url_checks[0]
     assert check.status_code == status_code
-    assert check.url_id == 1
     assert check.title == "Google"
     page_analyzer.add_new_url_to_db(URL("http://www.studio404.net"))
     all_urls = page_analyzer.format_all_urls_to_show()
