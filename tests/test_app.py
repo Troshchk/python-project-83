@@ -16,14 +16,6 @@ def setup_module():
         db.commit()
 
 
-def teardown_module():
-    db = psycopg2.connect(DATABASE_URL)
-    with open("code/tests/fixtures/test_teardown.sql") as f:
-        teardown_sql = f.read()
-    with db.cursor() as cursor:
-        cursor.execute(teardown_sql)
-        db.commit()
-
 
 def test_initial():
     response = app.test_client().get("/")
