@@ -26,13 +26,13 @@ class DB_manager:
         conn.close()
         return urls
 
-    def get_last_check(self, url):
+    def get_last_check(self, url_id):
         conn = self.connect()
         with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
             curs.execute(
                 "SELECT created_at,status_code FROM url_checks WHERE \
                      url_id=%s ORDER BY id DESC",
-                (url.id,),
+                (url_id,),
             )
             check = curs.fetchone()
         conn.close()
