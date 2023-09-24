@@ -45,6 +45,62 @@ The project uses an automated deployment approach via the [Render](https://rende
 ### CI/CD
 To maintain code quality, a GitHub workflow named [page_analyzer](https://github.com/Troshchk/python-project-83/actions/workflows/app.yml) has been incorporated into the project. This workflow automates the testing of code changes. During the setup of the workflow, a database for testing purposes is created, populated with data before each test, and cleaned after each test to ensure the integrity of each testing session.
 
+## Installation
+### Prerequisites
+Before installing and running the application, make sure you have the following prerequisites installed on your system:
+
+- Git
+- Poetry
+- PostgreSQL
+### Application Installation
+First, clone the project repository and navigate to its directory:
+```
+$ git clone git@github.com:Troshchk/python-project-83.git
+$ cd python-project-83
+```
+Next, install the project dependencies using Poetry:
+
+```
+$ make install
+```
+### Setting Up a Local Database
+To set up a local PostgreSQL database, follow these steps:
+
+Install PostgreSQL:
+
+```
+$ sudo apt install postgresql
+```
+Create a PostgreSQL user:
+
+```
+$ sudo -u postgres createuser --createdb {user_name}
+```
+Create a PostgreSQL database and assign the user as the owner:
+
+```
+$ sudo -u postgres createdb --owner={user_name} {db_name}
+```
+Add the necessary tables to the database by running the following command (replace {DATABASE_URL} with your actual database URL):
+
+```
+$ psql {DATABASE_URL} < database.sql
+```
+### Setting Up Environmental Variables
+Create a .env file in the root folder of the project and add the following variables to it. Make sure to set the values accordingly:
+
+```
+SECRET_KEY={secret_key}
+DATABASE_URL=postgresql://{user_name}:{password}@localhost/{db_name}
+```
+### Running the Application Locally
+To run the application locally, execute the following command:
+
+```
+$ make dev
+```
+This will start the application, and you can access it in your web browser at the specified local address.
+
 
 
 
