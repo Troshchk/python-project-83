@@ -7,7 +7,6 @@ from flask import (
     url_for,
     get_flashed_messages,
 )
-import psycopg2
 import os
 from dotenv import load_dotenv
 from .db_manager import DB_manager
@@ -18,9 +17,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 DATABASE_URL = os.getenv("DATABASE_URL")
-db_manager = DB_manager(
-    connection=psycopg2.connect(DATABASE_URL), DATABASE_URL=DATABASE_URL
-)
+db_manager = DB_manager(DATABASE_URL=DATABASE_URL)
 page_analyser = Page_analyzer(db_manager=db_manager)
 
 

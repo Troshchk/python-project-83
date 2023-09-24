@@ -4,8 +4,7 @@ import psycopg2
 
 
 class DB_manager:
-    def __init__(self, connection, DATABASE_URL):
-        self.connection = connection
+    def __init__(self, DATABASE_URL):
         self.db_url = DATABASE_URL
 
     def connect(self):
