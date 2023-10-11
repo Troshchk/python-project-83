@@ -42,17 +42,26 @@ def teardown_module():
             db.commit()
 
 
-def test_page_analyzer():
-    db_manager = DB_manager(DATABASE_URL=DATABASE_URL)
-    page_analyzer = Page_analyzer(db_manager=db_manager)
+db_manager = DB_manager(DATABASE_URL=DATABASE_URL)
+page_analyzer = Page_analyzer(db_manager=db_manager)
+
+
+def test_starting_state():
     all_urls = page_analyzer.format_all_urls_to_show()
     assert len(all_urls) == 2
+
+
+def test_adding_new_url():
     page_analyzer.add_new_url_to_db(URL("https://www.google.de"))
     all_urls = page_analyzer.format_all_urls_to_show()
     assert len(all_urls) == 3
     last_url = all_urls[0]
     assert last_url.created_at == datetime.date.today()
     assert last_url.name == "https://www.google.de"
+
+
+def test_first_url_data():
+    all_urls = page_analyzer.format_all_urls_to_show()
     first_url_id = all_urls[-1].id
     first_url_with_all_info = page_analyzer.format_ind_url_to_show(first_url_id)
     first_url_info = first_url_with_all_info[0]
@@ -60,6 +69,11 @@ def test_page_analyzer():
     assert first_url_info.created_at == datetime.date(2023, 9, 14)
     assert first_url_info.name == "https://www.google.com"
     assert first_url_checks == []
+
+
+def test_adding_url_check():
+    all_urls = page_analyzer.format_all_urls_to_show()
+    first_url_id = all_urls[-1].id
     status_code, response = page_analyzer.check_url(first_url_id)
     assert status_code == 200
     page_analyzer.insert_check_to_db(first_url_id, response)
@@ -68,11 +82,17 @@ def test_page_analyzer():
     check = first_url_checks[0]
     assert check.status_code == status_code
     assert check.title == "Google"
+
+
+def test_404_check_response():
     page_analyzer.add_new_url_to_db(URL("http://www.studio404.net"))
     all_urls = page_analyzer.format_all_urls_to_show()
     last_url_id = all_urls[0].id
-    status_code, response = page_analyzer.check_url(last_url_id)
+    status_code, _ = page_analyzer.check_url(last_url_id)
     assert status_code == 404
+
+
+def test_failed_check_output():
     page_analyzer.add_new_url_to_db(URL("https://www.google.uk"))
     all_urls = page_analyzer.format_all_urls_to_show()
     last_url_id = all_urls[0].id
