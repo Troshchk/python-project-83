@@ -4,6 +4,7 @@ from page_analyzer.db_manager import DB_manager
 from page_analyzer.page_analyser import Page_analyzer
 import psycopg2
 import os
+import pytest
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 LOCAL = os.getenv("LOCAL_TESTS", default=False)
@@ -17,7 +18,8 @@ def set_path_to_fixture(LOCAL):
     return path_to_fixture
 
 
-def setup_module():
+@pytest.fixture(autouse=True, scope='module')
+def db_setup():
     db = psycopg2.connect(DATABASE_URL)
     if LOCAL:
         with open(f"{set_path_to_fixture(LOCAL)}test_setup_create.sql") as f:
@@ -32,14 +34,14 @@ def setup_module():
         db.commit()
 
 
-def teardown_module():
-    if LOCAL:
-        db = psycopg2.connect(DATABASE_URL)
-        with open(f"{set_path_to_fixture(LOCAL)}test_teardown.sql") as f:
-            teardown_sql = f.read()
-        with db.cursor() as cursor:
-            cursor.execute(teardown_sql)
-            db.commit()
+# def teardown_module():
+#     if LOCAL:
+#         db = psycopg2.connect(DATABASE_URL)
+#         with open(f"{set_path_to_fixture(LOCAL)}test_teardown.sql") as f:
+#             teardown_sql = f.read()
+#         with db.cursor() as cursor:
+#             cursor.execute(teardown_sql)
+#             db.commit()
 
 
 db_manager = DB_manager(DATABASE_URL=DATABASE_URL)
