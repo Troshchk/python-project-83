@@ -63,7 +63,6 @@ class Page_analyzer:
             status_code = response.status_code
         except requests.exceptions.ConnectionError:
             response, status_code = None, None
-        print(status_code, response)
         return status_code, response
 
     def _format_reponse_for_db(self, response):

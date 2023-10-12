@@ -15,7 +15,6 @@ import validators
     ],
 )
 def test_url_formatting(url, expected):
-    print(type(URL(url).is_valid()))
     assert (
         isinstance(URL(url).is_valid(), validators.utils.ValidationError)
         == expected
