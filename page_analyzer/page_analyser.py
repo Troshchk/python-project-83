@@ -1,17 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
-from collections import namedtuple
+from dataclasses import dataclass
+from datetime import datetime
 
-URL_TO_SHOW = namedtuple(
-    "URL",
-    [
-        "id",
-        "name",
-        "created_at",
-        "last_check_created_at",
-        "last_check_status_code",
-    ],
-)
+
+@dataclass
+class URL_TO_SHOW:
+    id: int
+    name: str
+    created_at: datetime.date
+    last_check_created_at: datetime.date
+    last_check_status_code: int
 
 
 class Page_analyzer:
