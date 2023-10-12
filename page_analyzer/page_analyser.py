@@ -19,15 +19,15 @@ class Page_analyzer:
         self.db_manager = db_manager
 
     def url_in_db(self, url):
-        record = self.db_manager.get_record_by_url_name(url.url)
-        if record:
-            return record.id
+        url = self.db_manager.get_url_info_by_url_name(url.url)
+        if url:
+            return url.id
         return None
 
     def add_new_url_to_db(self, url):
         self.db_manager.insert_url_to_db(url.url)
-        record = self.db_manager.get_record_by_url_name(url.url)
-        return record.id
+        url = self.db_manager.get_url_info_by_url_name(url.url)
+        return url.id
 
     def format_all_urls_to_show(self):
         urls = self.db_manager.get_all_urls()

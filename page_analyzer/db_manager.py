@@ -10,7 +10,7 @@ class DB_manager:
     def connect(self):
         return psycopg2.connect(self.db_url)
 
-    def get_record_by_url_name(self, url_name):
+    def get_url_info_by_url_name(self, url_name):
         conn = self.connect()
         with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
             curs.execute("SELECT * FROM urls WHERE name=%s", (url_name,))
