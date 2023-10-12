@@ -32,7 +32,7 @@ class Page_analyzer:
         urls = self.db_manager.get_all_urls()
         urls_to_show = []
         checks = self.db_manager.get_last_checks_for_all_urls()
-        for url in reversed(urls):
+        for url in urls:
             check_created_at, check_status_code = "", ""
             for check in checks:
                 if url.id == check.url_id:
