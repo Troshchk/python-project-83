@@ -26,15 +26,14 @@ class DB_manager:
         conn.close()
         return urls
 
-    def get_last_check(self, url_id):
+    def get_last_checks_for_all_urls(self):
         conn = self.connect()
         with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
             curs.execute(
-                "SELECT created_at,status_code FROM url_checks WHERE \
-                     url_id=%s ORDER BY id DESC",
-                (url_id,),
+                "SELECT DISTINCT ON (url_id) url_id, created_at, status_code \
+                FROM url_checks ORDER BY url_id, id DESC"
             )
-            check = curs.fetchone()
+            check = curs.fetchall()
         conn.close()
         return check
 

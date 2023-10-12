@@ -32,14 +32,14 @@ class Page_analyzer:
     def format_all_urls_to_show(self):
         urls = self.db_manager.get_all_urls()
         urls_to_show = []
-        for url in urls:
-            check = self.db_manager.get_last_check(url.id)
-            if check:
-                check_created_at = check.created_at or ""
-                check_status_code = check.status_code or ""
-            else:
-                check_created_at = ""
-                check_status_code = ""
+        checks = self.db_manager.get_last_checks_for_all_urls()
+        for url in reversed(urls):
+            check_created_at, check_status_code = "", ""
+            for check in checks:
+                if url.id == check.url_id:
+                    check_created_at = check.created_at
+                    check_status_code = check.status_code
+                    break
             urls_to_show.append(
                 URL_TO_SHOW(
                     url.id,
