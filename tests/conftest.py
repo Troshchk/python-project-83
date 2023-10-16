@@ -1,6 +1,5 @@
 import psycopg2
 import os
-import pytest
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -38,12 +37,3 @@ def db_teardown():
         with db.cursor() as cursor:
             cursor.execute(teardown_sql)
             db.commit()
-
-
-@pytest.fixture(scope="module")
-def db_resource():
-    print("setup")
-    db_setup()
-    yield "db_resource"
-    print("teardown")
-    db_teardown()

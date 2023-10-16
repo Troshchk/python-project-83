@@ -3,8 +3,20 @@ from page_analyzer.url import URL
 from page_analyzer.db_manager import DB_manager
 from page_analyzer.page_analyser import Page_analyzer
 import os
+from conftest import db_setup, db_teardown
+import pytest
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+
+@pytest.fixture()
+def db_resource():
+    print("setup")
+    db_setup()
+    yield "db_resource"
+    print("teardown")
+    db_teardown()
+
 
 class Test_page_analyzer:
     db_manager = DB_manager(DATABASE_URL=DATABASE_URL)
