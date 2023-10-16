@@ -89,7 +89,7 @@ class Test_page_analyzer:
         check = first_url_checks[0]
         assert check.status_code == status_code
         assert check.title == "Google"
-    
+
     def test_404_check_response(self, db_resource):
         self.page_analyzer.add_new_url_to_db(URL("http://www.studio404.net"))
         all_urls = self.page_analyzer.format_all_urls_to_show()
