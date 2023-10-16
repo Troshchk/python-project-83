@@ -44,7 +44,7 @@ def db_teardown():
 
 
 @pytest.fixture()
-def db_db_resource():
+def db_resource():
     print("setup")
     db_setup()
     yield "db_resource"
