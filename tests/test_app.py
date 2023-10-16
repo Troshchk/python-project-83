@@ -12,7 +12,7 @@ def db_resource():
     db_teardown()
 
 
-def test_initial():
+def test_initial(db_resource):
     response = app.test_client().get("/")
     assert response.status_code == 200
 
@@ -29,6 +29,6 @@ def test_initial():
         ("https://www.google.de", 302),
     ],
 )
-def test_post_url(url, expected):
+def test_post_url(url, expected, db_resource):
     response = app.test_client().post("/urls", data={"url": url})
     assert response.status_code == expected
